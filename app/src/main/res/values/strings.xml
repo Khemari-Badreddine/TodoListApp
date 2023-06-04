@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">ToDoList</string>
+    <string name="searchbar_scrolling_view_behavior">androidx.appcompat.widget.SearchView$SearchBarScollingViewBehavior</string>
+    <string-array name="status_string_array">
+        <item>In Progress</item>
+        <item>Pending</item>
+        <item>Done</item>
+    </string-array>
+
+</resources>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:background="#FFFFFF"
+    app:cardCornerRadius="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="15dp"
+        android:background="#FFFFFF"
+        android:orientation="vertical">
+
+
+        <Spinner
+            android:id="@+id/status_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/progress_bg"
+            android:entries="@array/status_string_array" />
+
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-black"
+            android:gravity="start"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="Marketing research and presentation for
+new client"
+            android:textColor="#4D4343"
+            android:textSize="18sp"
+             />
+
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:progress="100"
+             />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            >
+
+            <ImageView
+                android:id="@+id/imageview"
+                android:layout_width="28dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/date"
+                />
+
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Until "
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center"
+                />
+
+            <TextView
+                android:id="@+id/datetv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="January 23"
+                android:layout_gravity="center"
+                />
+
+            <ImageView
+                android:id="@+id/doneiv"
+                android:layout_width="28dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                app:srcCompat="@drawable/done"
+
+                />
+
+            <TextView
+                android:id="@+id/donetv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3/5"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                />
+
+
+            <ImageView
+                android:id="@+id/delete"
+                android:layout_width="28dp"
+                android:layout_height="22dp"
+                app:srcCompat="@drawable/trash_can"
+                />
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>
