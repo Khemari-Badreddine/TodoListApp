@@ -1,11 +1,9 @@
 package com.example.todolist
 
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,9 +12,7 @@ import com.example.todolist.HelperClasses.mainAdapter
 import com.example.todolist.HelperClasses.mainHelperClass
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
-import com.google.gson.JsonSyntaxException
+
 import com.google.gson.reflect.TypeToken
 
 
@@ -43,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         todoList = getListFromSharedPreferences()
 
 
-        var adapter = mainAdapter(this, todoList)
+        val adapter = mainAdapter(this, todoList)
 
 
         mainRecyclerView.adapter = adapter
@@ -84,7 +80,7 @@ class MainActivity : AppCompatActivity() {
 
         builder.setView(R.layout.my_dialog_layout).setPositiveButton("OK") { _, _ ->
             val editText = dialog.findViewById<EditText>(R.id.my_edit_text)
-            var text = editText?.text.toString()
+            val text = editText?.text.toString()
             todoList.add(mainHelperClass(generateUniqueId(), text, 0))
 
 
@@ -96,40 +92,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun saveStringListToSharedPreferences(stringList: MutableList<String>) {
-        val gson = Gson()
-
-        val jsonArray1 = gson.toJsonTree(stringList).asJsonArray
-        val jsonString2 = sharedPreferences.getString("List", null)
-
-        var jsonArray2 = if (!jsonString2.isNullOrEmpty()) {
-            gson.fromJson(jsonString2, JsonArray::class.java)
-
-        } else {
-            JsonArray()
-        }
-
-        println("=====INSIDE 1====" + jsonArray1 + "=========")
-
-        println("=====INSIDE 2====" + jsonArray2 + "=========")
-
-
-        var mergedJsonArray = JsonArray()
-        if (!jsonArray2.isJsonNull) {
-            mergedJsonArray.addAll(jsonArray2)
-        }
-        if (!jsonArray1.isJsonNull) {
-            mergedJsonArray.addAll(jsonArray1)
-        }
-
-        println("=====INSIDE MERG====" + mergedJsonArray + "=========")
-
-
-        val mergedJsonString = mergedJsonArray.toString()
-
-        editor.putString("List", mergedJsonString)
-        editor.apply()
-    }
 
 
     fun getListFromSharedPreferences(): MutableList<mainHelperClass> {

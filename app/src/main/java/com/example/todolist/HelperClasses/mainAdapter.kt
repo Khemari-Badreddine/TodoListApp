@@ -38,11 +38,8 @@ class mainAdapter(
     }
 
 
-
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): mainAdapter.mainViewHolder {
-        val itemView =
-            LayoutInflater.from(parent.context).inflate(R.layout.main_card, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): mainAdapter.mainViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.main_card, parent, false)
 
         return mainViewHolder(itemView, this)
 
@@ -130,9 +127,9 @@ class mainAdapter(
                         }
                     }
 
-                    val existingItem = adapter.mainList.find { it.id == item.id }
+                    val existingItem = adapter.mainList.find { it.id == adapterPosition }
 
-                    print(item.id)
+                    print(adapterPosition)
 
                     if (existingItem != null) {
                         // Update the existing item in the list
@@ -157,7 +154,7 @@ class mainAdapter(
 
 
             delete.setOnClickListener {
-                val position = item.id
+                val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     // Remove the item from the stringList
                     val deletedItem = adapter.mainList.removeAt(position)
@@ -172,7 +169,7 @@ class mainAdapter(
 
                 refreshItemIds()
 
-                println(item.id)
+                println(adapterPosition)
                 println("===AFTER DELETE======" + adapter.mainList + "=========")
 
                 saveItemToSharedPreferences(adapter.mainList)
@@ -206,7 +203,7 @@ class mainAdapter(
                 "In Progress" -> 0
                 "Pending" -> 1
                 "Done" -> 2
-                else -> 0 // Default position if state is not recognized
+                else -> 0
             }
         }
 
@@ -237,13 +234,12 @@ class mainAdapter(
         notifyDataSetChanged()
     }
 
-
     private fun getSpinnerPosition(state: String): Int {
         return when (state) {
             "In Progress" -> 0
             "Pending" -> 1
             "Done" -> 2
-            else -> 0 // Default position if state is not recognized
+            else -> 0
         }
     }
 
