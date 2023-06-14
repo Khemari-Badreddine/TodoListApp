@@ -9,17 +9,15 @@ import android.widget.AdapterView
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.R
-import com.example.todolist.database.todo
-import com.example.todolist.database.todoListViewModel
+import com.example.todolist.database.Todo
 
 
 class todoListAdapter(private val context: Context) :
     RecyclerView.Adapter<todoListAdapter.MyViewHolder>() {
 
-    private var todoList = emptyList<todo>()
+    private var todoList = emptyList<Todo>()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -96,7 +94,7 @@ class todoListAdapter(private val context: Context) :
 
     }
 
-    fun setData(todoList: List<todo>) {
+    fun setData(todoList: List<Todo>) {
         this.todoList = todoList
         notifyDataSetChanged()
     }

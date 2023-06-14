@@ -3,6 +3,7 @@ package com.example.todolist
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.EditText
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -12,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.HelperClasses.mainAdapter
 import com.example.todolist.HelperClasses.mainHelperClass
 import com.example.todolist.HelperClasses.todoListAdapter
+import com.example.todolist.database.Todo
+import com.example.todolist.database.todoListApplication
 import com.example.todolist.database.todoListViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
@@ -28,8 +31,10 @@ class MainActivity : AppCompatActivity() {
     lateinit var mainRecyclerView: RecyclerView
     var todoList: MutableList<mainHelperClass> = mutableListOf()
 
-     lateinit var mtodoListViewModel: todoListViewModel
 
+    private val mtodoListViewModel: todoListViewModel by viewModels {
+        todoListViewModel.todoListViewModelFactory((application as todoListApplication).repository)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
         mainRecyclerView = findViewById(R.id.mainRv)
 
-     //   todoList = getListFromSharedPreferences()
+        //   todoList = getListFromSharedPreferences()
 
 
         //val adapter = mainAdapter(this, todoList)
@@ -52,32 +57,28 @@ class MainActivity : AppCompatActivity() {
         mainRecyclerView.adapter = madapter
         mainRecyclerView.layoutManager = LinearLayoutManager(this)
 
-      /*  mtodoListViewModel.alltodo.observe(this, Observer { todo ->
-            madapter.setData(todo)
-        })*/
-
-        mtodoListViewModel = ViewModelProvider(this,ViewModelProvider.AndroidViewModelFactory.getInstance(application)).get(todoListViewModel::class.java)
-
-
-
-
-
-
-
-
-
-      /*  adapter.setOnItemClickListener(object : mainAdapter.onItemClickListener {
-
-            override fun onItemClick(position: Int) {
-
-                // Toast.makeText(this@MainActivity, "clicked: ${position}", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this@MainActivity, DetailsActivity::class.java)
-                intent.putExtra("heading", todoList[position].title)
-                intent.putExtra("outid", position)
-                startActivity(intent)
+        mtodoListViewModel.alltodo.observe(this) { todo ->
+            todo.let {
+                madapter.setData(it)
 
             }
-        })*/
+        }
+
+        //  mtodoListViewModel = ViewModelProvider(this,ViewModelProvider.AndroidViewModelFactory.getInstance(application)).get(todoListViewModel::class.java)
+
+
+        /*  adapter.setOnItemClickListener(object : mainAdapter.onItemClickListener {
+
+              override fun onItemClick(position: Int) {
+
+                  // Toast.makeText(this@MainActivity, "clicked: ${position}", Toast.LENGTH_SHORT).show()
+                  val intent = Intent(this@MainActivity, DetailsActivity::class.java)
+                  intent.putExtra("heading", todoList[position].title)
+                  intent.putExtra("outid", position)
+                  startActivity(intent)
+
+              }
+          })*/
 
 
         val fab = findViewById<FloatingActionButton>(R.id.floating_action_button)
@@ -97,6 +98,10 @@ class MainActivity : AppCompatActivity() {
             val editText = dialog.findViewById<EditText>(R.id.my_edit_text)
             val text = editText?.text.toString()
             todoList.add(mainHelperClass(generateUniqueId(), text, 0))
+
+            val todo = Todo(0,text,1)
+
+            mtodoListViewModel.addtodo(todo)
 
 
         }.setNegativeButton("Cancel", null)

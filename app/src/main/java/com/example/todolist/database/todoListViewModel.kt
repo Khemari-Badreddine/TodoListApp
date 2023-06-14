@@ -3,33 +3,28 @@ package com.example.todolist.database
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class todoListViewModel(application: Application) : AndroidViewModel(application) {
+class todoListViewModel(private val todoRepository: todoListRepository) : ViewModel() {
 
-    val alltodo: LiveData<List<todo>>
-    private val todoRepository: todoListRepository
-
-
-     init {
-        val todoDao = todoListDataBase.getDatabase(application).getDao()
-        todoRepository = todoListRepository(todoDao)
-        alltodo = todoRepository.alltodo
-
-    }
+    val alltodo: LiveData<List<Todo>> = todoRepository.alltodo.asLiveData()
 
 
-    fun addtodo(todo: todo) {
+
+    fun addtodo(todo: Todo) {
         viewModelScope.launch(Dispatchers.IO) {
             todoRepository.inserttodo(todo)
 
         }
     }
 
-   /* class todoListViewModelFactory(private val repository: todoListRepository) :
+    class todoListViewModelFactory(private val repository: todoListRepository) :
         ViewModelProvider.Factory {
 
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -41,5 +36,5 @@ class todoListViewModel(application: Application) : AndroidViewModel(application
             throw IllegalArgumentException("UKNOWN VIEWMODEL CLASS")
 
         }
-    }*/
+    }
 }
