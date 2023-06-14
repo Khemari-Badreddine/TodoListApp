@@ -1,21 +1,24 @@
 package com.example.todolist
 
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.HelperClasses.mainAdapter
 import com.example.todolist.HelperClasses.mainHelperClass
+import com.example.todolist.HelperClasses.todoListAdapter
+import com.example.todolist.database.todoListViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
-
 import com.google.gson.reflect.TypeToken
 
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     lateinit var sharedPreferences: SharedPreferences
@@ -24,6 +27,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var editor: SharedPreferences.Editor
     lateinit var mainRecyclerView: RecyclerView
     var todoList: MutableList<mainHelperClass> = mutableListOf()
+
+     lateinit var mtodoListViewModel: todoListViewModel
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,33 +42,42 @@ class MainActivity : AppCompatActivity() {
 
         mainRecyclerView = findViewById(R.id.mainRv)
 
-        todoList = getListFromSharedPreferences()
+     //   todoList = getListFromSharedPreferences()
 
 
-        val adapter = mainAdapter(this, todoList)
+        //val adapter = mainAdapter(this, todoList)
+        val madapter = todoListAdapter(this)
 
 
-        mainRecyclerView.adapter = adapter
+        mainRecyclerView.adapter = madapter
         mainRecyclerView.layoutManager = LinearLayoutManager(this)
 
+      /*  mtodoListViewModel.alltodo.observe(this, Observer { todo ->
+            madapter.setData(todo)
+        })*/
 
-        adapter.setOnItemClickListener(object : mainAdapter.onItemClickListener {
+        mtodoListViewModel = ViewModelProvider(this,ViewModelProvider.AndroidViewModelFactory.getInstance(application)).get(todoListViewModel::class.java)
+
+
+
+
+
+
+
+
+
+      /*  adapter.setOnItemClickListener(object : mainAdapter.onItemClickListener {
 
             override fun onItemClick(position: Int) {
 
-               // Toast.makeText(this@MainActivity, "clicked: ${position}", Toast.LENGTH_SHORT).show()
-                val intent = Intent( this@MainActivity ,DetailsActivity::class. java)
-                intent.putExtra("heading",todoList[position].title)
-                intent.putExtra("outid",position)
+                // Toast.makeText(this@MainActivity, "clicked: ${position}", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this@MainActivity, DetailsActivity::class.java)
+                intent.putExtra("heading", todoList[position].title)
+                intent.putExtra("outid", position)
                 startActivity(intent)
 
             }
-
-
-        }
-
-
-        )
+        })*/
 
 
         val fab = findViewById<FloatingActionButton>(R.id.floating_action_button)
@@ -92,8 +107,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
-
     fun getListFromSharedPreferences(): MutableList<mainHelperClass> {
         val json = sharedPreferences.getString("List", null)
 
@@ -110,3 +123,5 @@ class MainActivity : AppCompatActivity() {
 
 
 }
+
+annotation class AndroidEntryPoint

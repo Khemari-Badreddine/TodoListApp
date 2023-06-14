@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 
 @Entity("todoList_table")
-data class todoList(
+data class todo(
     @PrimaryKey(autoGenerate = true)val id: Int,
     @ColumnInfo(name="col_title")val title: String,
     @ColumnInfo(name="col_status")val status: Int
