@@ -1,16 +1,21 @@
-package com.example.todolist.database
+package com.example.todolist.TodoDatabase
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.todolist.DetailsDatabase.Details
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.internal.synchronized
 import kotlinx.coroutines.launch
 
-@Database(entities = [Todo::class], version = 1, exportSchema = false)
+@Database(
+    entities = [Todo::class,Details::class],
+    version = 1,
+    exportSchema = false
+)
 abstract class todoListDataBase : RoomDatabase() {
 
     abstract fun getDao(): todoListDao
@@ -25,11 +30,11 @@ abstract class todoListDataBase : RoomDatabase() {
             }
         }
 
-         fun populateDatabase(todoDao: todoListDao) {
+        fun populateDatabase(todoDao: todoListDao) {
             todoDao.deleteAll()
 
-            val todo = Todo(0, "lmfao", 1)
-            todoDao.inserttodo(todo)
+            // val todo = Todo(0, "lmfao", 1)
+            //  todoDao.inserttodo(todo)
 
 
         }

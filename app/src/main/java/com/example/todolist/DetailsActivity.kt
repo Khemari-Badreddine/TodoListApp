@@ -1,31 +1,39 @@
 package com.example.todolist
 
+import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.todolist.DetailsDatabase.Details
 import com.example.todolist.HelperClasses.detailsAdapter
-import com.example.todolist.HelperClasses.detailsHelperClass
+import com.example.todolist.HelperClasses.todoListAdapter
+import com.example.todolist.TodoDatabase.Todo
+import com.example.todolist.TodoDatabase.todoListApplication
+import com.example.todolist.TodoDatabase.todoListViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 class DetailsActivity : AppCompatActivity() {
 
-    var detailsList : MutableList<detailsHelperClass> = mutableListOf()
     lateinit var sharedPreferences: SharedPreferences
 
     lateinit var editor: SharedPreferences.Editor
     lateinit var detailsRecyclerView: RecyclerView
 
     var outid : Int = 0
-    private var i = -1
 
+    private val mtodoListViewModel: todoListViewModel by viewModels {
+        todoListViewModel.todoListViewModelFactory((application as todoListApplication).repository)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,15 +61,43 @@ class DetailsActivity : AppCompatActivity() {
 
         detailsRecyclerView = findViewById(R.id.detailsRv)
 
-        detailsList = getListFromSharedPreferences(outid)
+        val madapter = detailsAdapter(this)
 
 
-        var adapter = detailsAdapter(this, detailsList)
-
-
-        detailsRecyclerView.adapter = adapter
+        detailsRecyclerView.adapter = madapter
         detailsRecyclerView.layoutManager = LinearLayoutManager(this)
 
+        mtodoListViewModel.alldetails(outid).observe(this) { details ->
+            details.let {
+                println("==============="+outid+"===============")
+                println("==============="+details+"===============")
+
+
+                madapter.setData(it)
+
+            }
+        }
+
+        madapter.setOnItemClickListener(object : detailsAdapter.onItemClickListener {
+
+            override fun onItemClick(position: Int,title: String, status: Int,date: String,steps: String, indicator: Int) {
+                val details = Details(position,outid, title, status,date,steps)
+
+
+                if (indicator == 0) {
+                    Toast.makeText(
+                        this@DetailsActivity,
+                        "clicked: ${position} with status: ${status} and title: ${title} ",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                } else if (indicator == 1) {
+                    mtodoListViewModel.updatedetails(details)
+                } else if (indicator == 2) {
+                    mtodoListViewModel.deletedetails(position)
+                }
+            }
+        })
 
 
 
@@ -88,8 +124,8 @@ class DetailsActivity : AppCompatActivity() {
         builder.setView(R.layout.my_dialog_layout).setPositiveButton("OK") { _, _ ->
             val editText = dialog.findViewById<EditText>(R.id.my_edit_text)
             var text = editText?.text.toString()
-            detailsList.add(detailsHelperClass(generateUniqueId(), text, 0,50,"12 july","3/5",outid))
-
+            val detail = Details(0,outid, text, 0,"12 july","3/5")
+            mtodoListViewModel.adddetails(detail)
 
         }.setNegativeButton("Cancel", null)
         dialog = builder.create()
@@ -101,17 +137,4 @@ class DetailsActivity : AppCompatActivity() {
 
 
 
-    fun getListFromSharedPreferences(position : Int): MutableList<detailsHelperClass> {
-        val json = sharedPreferences.getString("detailsList_${position}", null)
-
-        val gson = Gson()
-        val type = object : TypeToken<MutableList<detailsHelperClass>>() {}.type
-
-        return gson.fromJson(json, type) ?: mutableListOf()
-    }
-
-    private fun generateUniqueId(): Int {
-        i++
-        return i
-    }
 }

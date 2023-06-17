@@ -81,7 +81,7 @@ new client"
                 />
 
             <ImageView
-                android:id="@+id/doneiv"
+                android:id="@+id/stepsiv"
                 android:layout_width="28dp"
                 android:layout_height="22dp"
                 android:layout_gravity="center"
@@ -91,7 +91,7 @@ new client"
                 />
 
             <TextView
-                android:id="@+id/donetv"
+                android:id="@+id/stepstv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="3/5"

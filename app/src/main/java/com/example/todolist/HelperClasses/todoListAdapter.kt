@@ -6,12 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.R
-import com.example.todolist.database.Todo
+import com.example.todolist.TodoDatabase.Todo
+import kotlin.properties.Delegates
 
 
 class todoListAdapter(private val context: Context) :
@@ -20,9 +22,21 @@ class todoListAdapter(private val context: Context) :
     private var todoList = emptyList<Todo>()
 
 
+    private lateinit var mlistener: onItemClickListener
+
+    interface onItemClickListener {
+        fun onItemClick(position: Int, title: String, status: Int,indicator :Int)
+    }
+
+    fun setOnItemClickListener(listener: onItemClickListener) {
+        mlistener = listener
+    }
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         return MyViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.main_card, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.main_card, parent, false),
+            this
         )
     }
 
@@ -33,66 +47,122 @@ class todoListAdapter(private val context: Context) :
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val currentItem = todoList[position]
 
-        holder.itemView.id = currentItem.id
+        holder.id = currentItem.id
         holder.title.text = currentItem.title
         holder.spinner.setSelection(currentItem.status)
 
-      //  val todo = todo(currentItem.id,currentItem.title,currentItem.status)
-      //  mtodoListViewModel.addtodo(todo)
+
+        holder.bind(currentItem)
+
+
+    }
+
+    class MyViewHolder(itemView: View, private val adapter: todoListAdapter) :
+        RecyclerView.ViewHolder(itemView) {
+        val title: TextView = itemView.findViewById(R.id.title)
+        val spinner: Spinner = itemView.findViewById(R.id.status_spinner)
+        val delete: ImageView = itemView.findViewById(R.id.delete)
+        var id by Delegates.notNull<Int>()
+
+        init {
+
+            itemView.setOnClickListener {
+
+                   adapter.mlistener.onItemClick(
+                   id,
+                    title.text.toString(),
+                    getSpinnerPosition(spinner.selectedItem.toString()),
+                    0
+                )
+
+            }
+        }
+
+        private fun getSpinnerPosition(state: String): Int {
+            return when (state) {
+                "In Progress" -> 0
+                "Pending" -> 1
+                "Done" -> 2
+                else -> 0
+            }
+        }
+
+        fun bind(item: Todo) {
+            // Get the context from the itemView
+            val coontext = itemView.context
+
+            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+
+
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    // Get the selected item
+                    val selectedItem = spinner.selectedItem.toString()
+                    val selectedItemView = view as TextView
+
+
+                    adapter.mlistener.onItemClick(item.id, title.text.toString(), getSpinnerPosition(spinner.selectedItem.toString()),1)
 
 
 
-        holder.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    when (selectedItem) {
+                        "In Progress" -> {
+                            spinner.setBackgroundResource(R.drawable.progress_bg)
+                            val textcolor = ContextCompat.getColor(coontext, R.color.orange)
+                            selectedItemView.setTextColor(textcolor)
 
+                        }
 
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                // Get the selected item
-                val selectedItem = holder.spinner.selectedItem.toString()
-                val selectedItemView = view as TextView
+                        "Pending" -> {
+                            spinner.setBackgroundResource(R.drawable.pending_bg)
+                            val textcolor = ContextCompat.getColor(coontext, R.color.redish)
+                            selectedItemView.setTextColor(textcolor)
 
+                        }
 
-                when (selectedItem) {
-                    "In Progress" -> {
-                        holder.spinner.setBackgroundResource(R.drawable.progress_bg)
-                        val textcolor = ContextCompat.getColor(context, R.color.orange)
-                        selectedItemView.setTextColor(textcolor)
+                        "Done" -> {
+                            spinner.setBackgroundResource(R.drawable.done_bg)
+                            val textcolor = ContextCompat.getColor(coontext, R.color.green)
+                            selectedItemView.setTextColor(textcolor)
 
+                        }
                     }
 
-                    "Pending" -> {
-                        holder.spinner.setBackgroundResource(R.drawable.pending_bg)
-                        val textcolor = ContextCompat.getColor(context, R.color.redish)
-                        selectedItemView.setTextColor(textcolor)
+                }
 
-                    }
-
-                    "Done" -> {
-                        holder.spinner.setBackgroundResource(R.drawable.done_bg)
-                        val textcolor = ContextCompat.getColor(context, R.color.green)
-                        selectedItemView.setTextColor(textcolor)
-
-                    }
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    // Do nothing
                 }
 
 
+                private fun getSpinnerPosition(state: String): Int {
+                    return when (state) {
+                        "In Progress" -> 0
+                        "Pending" -> 1
+                        "Done" -> 2
+                        else -> 0
+                    }
+                }
+            }
+            delete.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    adapter.mlistener.onItemClick(item.id, title.text.toString(), getSpinnerPosition(spinner.selectedItem.toString()),2)
+
+                }
+
             }
 
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
+
         }
-    }
 
-    class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val title: TextView = itemView.findViewById(R.id.title)
-        val spinner: Spinner = itemView.findViewById(R.id.status_spinner)
 
     }
+
 
     fun setData(todoList: List<Todo>) {
         this.todoList = todoList

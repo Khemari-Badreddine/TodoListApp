@@ -1,4 +1,4 @@
-package com.example.todolist.database
+package com.example.todolist.TodoDatabase
 
 import android.app.Application
 import kotlinx.coroutines.CoroutineScope
