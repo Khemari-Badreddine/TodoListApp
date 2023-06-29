@@ -31,8 +31,7 @@
             android:gravity="start"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
-            android:text="Marketing research and presentation for
-new client"
+            android:text="Marketing research and presentation for new client"
             android:textColor="#4D4343"
             android:textSize="18sp"
              />

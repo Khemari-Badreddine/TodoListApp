@@ -9,7 +9,7 @@
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
-        <item name="android:textColorHint">@color/text_color</item>
+        <item name="android:textColorHint">@color/black</item>
          <item name="android:editTextColor">@color/text_color</item>
 
             <!-- Status bar color. -->

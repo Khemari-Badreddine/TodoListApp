@@ -2,7 +2,8 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id "kotlin-kapt"
-    }
+    id 'androidx.navigation.safeargs' version '2.4.2' apply false
+}
 
 android {
     namespace 'com.example.todolist'
@@ -10,6 +11,16 @@ android {
 
     kapt {
         correctErrorTypes = true
+    }
+
+    buildscript {
+        repositories {
+            google()
+        }
+        dependencies {
+            def nav_version = "2.6.0"
+            classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
+        }
     }
 
     defaultConfig {
@@ -32,6 +43,8 @@ android {
     buildFeatures{
 
         viewBinding true
+        dataBinding true
+
 
     }
 
@@ -74,5 +87,8 @@ dependencies {
 
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+
+
 
 }

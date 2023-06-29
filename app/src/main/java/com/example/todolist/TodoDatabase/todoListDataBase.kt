@@ -5,14 +5,16 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.todolist.DetailsDatabase.Details
+import com.example.todolist.Database.Details
+import com.example.todolist.Database.Steps
+import com.example.todolist.Database.Todo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.internal.synchronized
 import kotlinx.coroutines.launch
 
 @Database(
-    entities = [Todo::class,Details::class],
+    entities = [Todo::class,Details::class,Steps::class],
     version = 1,
     exportSchema = false
 )

@@ -11,10 +11,9 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.todolist.DetailsDatabase.Details
+import com.example.todolist.Database.Details
 import com.example.todolist.R
 import com.example.todolist.Relations.TodoWithDetails
-import com.example.todolist.TodoDatabase.Todo
 import kotlin.properties.Delegates
 
 
@@ -30,6 +29,7 @@ class detailsAdapter(private val context: Context) :
         fun onItemClick(
             position: Int,
             title: String,
+            description: String?,
             status: Int,
             date: String,
             steps: String,
@@ -51,11 +51,10 @@ class detailsAdapter(private val context: Context) :
 
     override fun getItemCount(): Int {
         return if (todoList.isNotEmpty() && todoList[0].details.isNotEmpty()) {
-            println("===========NOT EMMPTYYYY=============")
+          //  println("===========NOT EMMPTYYYY=============")
             todoList[0].details.size
         } else {
-            println("===========EMMPTYYYY=============")
-
+           // println("===========EMMPTYYYY=============")
             0
         }
     }
@@ -65,6 +64,7 @@ class detailsAdapter(private val context: Context) :
         val currentItem = todoList[0].details
 
         holder.id = currentItem[position].id
+        holder.description = currentItem[position].description
         holder.title.text = currentItem[position].title
         holder.date.text = currentItem[position].date
         holder.steps.text = currentItem[position].steps
@@ -80,17 +80,18 @@ class detailsAdapter(private val context: Context) :
         val date: TextView = itemView.findViewById(R.id.datetv)
         val steps: TextView = itemView.findViewById(R.id.stepstv)
         val spinner: Spinner = itemView.findViewById(R.id.status_spinner)
+        var description : String? = null
         val delete: ImageView = itemView.findViewById(R.id.delete)
         var id by Delegates.notNull<Int>()
-
 
         init {
 
             itemView.setOnClickListener {
 
                 adapter.mlistener.onItemClick(
-                    position,
+                    id,
                     title.text.toString(),
+                    description,
                     getSpinnerPosition(spinner.selectedItem.toString()),
                     date.text.toString(),
                     steps.text.toString(),
@@ -129,7 +130,9 @@ class detailsAdapter(private val context: Context) :
 
                     adapter.mlistener.onItemClick(
                         item.id,
+
                         title.text.toString(),
+                        description,
                         getSpinnerPosition(spinner.selectedItem.toString()),
                         date.text.toString(),
                         steps.text.toString(),
@@ -182,6 +185,7 @@ class detailsAdapter(private val context: Context) :
                     adapter.mlistener.onItemClick(
                         item.id,
                         title.text.toString(),
+                        description,
                         getSpinnerPosition(spinner.selectedItem.toString()),
                         date.text.toString(),
                         steps.text.toString(),

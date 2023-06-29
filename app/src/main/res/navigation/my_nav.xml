@@ -3,24 +3,58 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/my_nav"
-    app:startDestination="@id/todoListFragment">
+    app:startDestination="@id/mainFragment">
 
-    <fragment
-        android:id="@+id/todoListFragment"
-        android:name="com.example.todolist.Fragments.todoListFragment"
-        android:label="fragment_todo_list"
-        tools:layout="@layout/fragment_todo_list" >
-        <action
-            android:id="@+id/action_todoListFragment_to_detailsFragment"
-            app:destination="@id/detailsFragment" />
-    </fragment>
     <fragment
         android:id="@+id/detailsFragment"
         android:name="com.example.todolist.Fragments.detailsFragment"
         android:label="fragment_details"
         tools:layout="@layout/fragment_details" >
         <action
-            android:id="@+id/action_detailsFragment_to_todoListFragment"
-            app:destination="@id/todoListFragment" />
+            android:id="@+id/action_detailsFragment_to_createTaskFragment"
+            app:destination="@id/createTaskFragment" />
+        <action
+            android:id="@+id/action_detailsFragment_to_stepsFragment"
+            app:destination="@id/stepsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/createTaskFragment"
+        android:name="com.example.todolist.Fragments.createTaskFragment"
+        android:label="fragment_create_task"
+        tools:layout="@layout/fragment_create_task">
+        <action
+            android:id="@+id/action_createTaskFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/stepsFragment"
+        android:name="com.example.todolist.Fragments.StepsFragment"
+        android:label="fragment_steps"
+        tools:layout="@layout/fragment_steps" >
+        <action
+            android:id="@+id/action_stepsFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+        <action
+            android:id="@+id/action_stepsFragment_to_editStepsFragment"
+            app:destination="@id/editStepsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.todolist.Fragments.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editStepsFragment"
+        android:name="com.example.todolist.Fragments.editStepsFragment"
+        android:label="fragment_edit_steps"
+        tools:layout="@layout/fragment_edit_steps" >
+        <action
+            android:id="@+id/action_editStepsFragment_to_stepsFragment"
+            app:destination="@id/stepsFragment" />
+    </fragment>
+
 </navigation>

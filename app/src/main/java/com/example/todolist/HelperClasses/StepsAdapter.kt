@@ -1,41 +1,32 @@
-package com.example.todolist.HelperClasses;
-
+package com.example.todolist.HelperClasses
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ImageView
+import android.widget.EditText
 import android.widget.Spinner
+
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.todolist.R
+import com.example.todolist.Database.Steps
 import com.example.todolist.Database.Todo
+import com.example.todolist.R
+import com.example.todolist.Relations.DetailsWithSteps
 import kotlin.properties.Delegates
 
 
-class todoListAdapter(private val context: Context) :
-    RecyclerView.Adapter<todoListAdapter.MyViewHolder>() {
+class StepsAdapter(private val context: Context) :
+    RecyclerView.Adapter<StepsAdapter.MyViewHolder>() {
 
-    private var todoList = emptyList<Todo>()
-
-
-    private lateinit var mlistener: onItemClickListener
-
-    interface onItemClickListener {
-        fun onItemClick(position: Int, title: String, status: Int,indicator :Int)
-    }
-
-    fun setOnItemClickListener(listener: onItemClickListener) {
-        mlistener = listener
-    }
+    private var todoList = emptyList<Steps>()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         return MyViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.main_card, parent, false),
+            LayoutInflater.from(parent.context).inflate(R.layout.step_card, parent, false),
             this
         )
     }
@@ -48,46 +39,25 @@ class todoListAdapter(private val context: Context) :
         val currentItem = todoList[position]
 
         holder.id = currentItem.id
-        holder.title.text = currentItem.title
+        holder.stepsnum.text = currentItem.stepNum.toString()
         holder.spinner.setSelection(currentItem.status)
-
+        holder.title.setText(currentItem.title)
+        holder.description.setText(currentItem.description)
 
         holder.bind(currentItem)
 
 
     }
 
-    class MyViewHolder(itemView: View, private val adapter: todoListAdapter) :
+    class MyViewHolder(itemView: View, private val adapter: StepsAdapter) :
         RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.title)
+        val description: TextView = itemView.findViewById(R.id.descriptiontv)
         val spinner: Spinner = itemView.findViewById(R.id.status_spinner)
-        val delete: ImageView = itemView.findViewById(R.id.delete)
+        val stepsnum: TextView = itemView.findViewById(R.id.steps_numbertv)
         var id by Delegates.notNull<Int>()
 
-        init {
-
-            itemView.setOnClickListener {
-
-                   adapter.mlistener.onItemClick(
-                   id,
-                    title.text.toString(),
-                    getSpinnerPosition(spinner.selectedItem.toString()),
-                    0
-                )
-
-            }
-        }
-
-        private fun getSpinnerPosition(state: String): Int {
-            return when (state) {
-                "In Progress" -> 0
-                "Pending" -> 1
-                "Done" -> 2
-                else -> 0
-            }
-        }
-
-        fun bind(item: Todo) {
+        fun bind(item: Steps) {
             // Get the context from the itemView
             val coontext = itemView.context
 
@@ -103,9 +73,6 @@ class todoListAdapter(private val context: Context) :
                     // Get the selected item
                     val selectedItem = spinner.selectedItem.toString()
                     val selectedItemView = view as TextView
-
-
-                    adapter.mlistener.onItemClick(item.id, title.text.toString(), getSpinnerPosition(spinner.selectedItem.toString()),1)
 
 
 
@@ -148,14 +115,6 @@ class todoListAdapter(private val context: Context) :
                     }
                 }
             }
-            delete.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    adapter.mlistener.onItemClick(item.id, title.text.toString(), getSpinnerPosition(spinner.selectedItem.toString()),2)
-
-                }
-
-            }
 
         }
 
@@ -163,7 +122,7 @@ class todoListAdapter(private val context: Context) :
     }
 
 
-    fun setData(todoList: List<Todo>) {
+    fun setData(todoList: List<Steps>) {
         this.todoList = todoList
         notifyDataSetChanged()
     }

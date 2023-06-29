@@ -7,14 +7,11 @@
     android:background="#fafafa"
     tools:context=".Fragments.detailsFragment">
 
-
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linearLayoutCompat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="27dp"
-        android:layout_marginTop="27dp"
-        android:layout_marginBottom="27dp"
+        android:layout_margin="20dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -28,11 +25,13 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/backarrow"
+                android:id="@+id/backiv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/vector" />
+                app:srcCompat="@drawable/vector"
+                android:clickable="true"
+                />
 
             <TextView
                 android:id="@+id/todotv"
@@ -53,7 +52,10 @@
                 android:layout_margin="5dp"
                 app:backgroundTint="#FFFFFF"
                 app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.FloatingActionButton.Circle"
-                app:srcCompat="@drawable/baseline_add_24" />
+                app:srcCompat="@drawable/baseline_add_24"
+                app:tint="#3652E4"
+
+                />
 
 
         </LinearLayout>
