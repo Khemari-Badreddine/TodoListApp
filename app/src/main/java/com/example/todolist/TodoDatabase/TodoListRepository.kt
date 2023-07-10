@@ -1,6 +1,8 @@
 package com.example.todolist.TodoDatabase
 
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
 import com.example.todolist.Database.Details
 import com.example.todolist.Database.Steps
 import com.example.todolist.Database.Todo
@@ -33,9 +35,10 @@ class todoListRepository(private val todoListdao: todoListDao) {
         todoListdao.updatetodo(todo)
     }
 
-    fun update(todos: List<Todo>) {
-        todoListdao.update(todos)
+    fun searchtodoListtable(searchQuery: String): LiveData<List<Todo>> {
+        return todoListdao.searchtodoListtable(searchQuery).asLiveData()
     }
+
 
 
      fun deletetodo(todo: Todo) {
@@ -53,6 +56,7 @@ class todoListRepository(private val todoListdao: todoListDao) {
         todoListdao.updatedetails(details)
     }
 
+
      fun deletedetails(id: Int) {
         todoListdao.deletedetails(id)
     }
@@ -65,6 +69,12 @@ class todoListRepository(private val todoListdao: todoListDao) {
         todoListdao.getNextDetailsId()
     }
 
+    fun searchtdetailstable(searchQuery: String,id: Int): LiveData<List<Details>> {
+        return todoListdao.searchtdetailstable(searchQuery,id).asLiveData()
+    }
+
+
+
 
     //Steps Repository
 
@@ -72,25 +82,38 @@ class todoListRepository(private val todoListdao: todoListDao) {
         todoListdao.insertsteps(steps)
     }
 
-     fun updatesteps(id: Int, title: String?) {
-        todoListdao.updatesteps(id, title)
+
+     fun updatesteps(steps: Steps) {
+        todoListdao.updatesteps(steps)
     }
 
-     fun updateStepNum(stepsId: Int, newStepNum: Int) {
-        todoListdao.updateStepNum(stepsId, newStepNum)
-    }
-
-     fun deletesteps(id: Int) {
-        todoListdao.deletesteps(id)
-    }
 
      fun deleteTodoWithSteps(id: Int) {
         todoListdao.deleteTodoWithSteps(id)
     }
 
-    fun deleteallsteps() {
-        todoListdao.deleteallsteps()
+    suspend fun getNumberOfStepsWithStatus2(id: Int): Int = withContext(Dispatchers.IO) {
+        todoListdao.getNumberOfStepsWithStatus2(id)
     }
+
+    suspend fun getNumberOfStepsInDetail(id: Int): Int = withContext(Dispatchers.IO) {
+        todoListdao.getNumberOfStepsInDetail(id)
+    }
+
+    suspend fun getMaxstepNum(id: Int): Int = withContext(Dispatchers.IO) {
+        todoListdao.getMaxstepNum(id)
+    }
+
+    fun deletestepswithid(idtodelete: Int) {
+        todoListdao.deletestepswithid(idtodelete)
+    }
+
+
+    fun deleteAndCreate(steps: MutableList<Steps>,id: Int) {
+        todoListdao.deleteAndCreate(steps,id)
+    }
+
+
 
 
 }

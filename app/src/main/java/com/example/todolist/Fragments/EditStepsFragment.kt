@@ -9,19 +9,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todolist.Database.Details
 import com.example.todolist.Database.Steps
 import com.example.todolist.HelperClasses.CreateTaskStepsAdapter
-import com.example.todolist.HelperClasses.StepsAdapter
 import com.example.todolist.R
 import com.example.todolist.TodoDatabase.todoListApplication
 import com.example.todolist.TodoDatabase.todoListViewModel
 import com.example.todolist.databinding.FragmentEditStepsBinding
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 
 
@@ -31,14 +32,12 @@ class editStepsFragment : Fragment() {
     private var _binding: FragmentEditStepsBinding? = null
     private var newList = mutableListOf<Steps>()
 
-
-    var heading: String? = null
     var detailsId: Int? = 0
     var todoId: Int? = 0
+
     private var k: Int = 1
-
-
     private lateinit var context: Context
+    private var isUserUpdate = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -52,10 +51,15 @@ class editStepsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        heading = arguments?.getString("heading")
         detailsId = arguments?.getInt("detailsId")
         todoId = arguments?.getInt("todoId")
+        if (runBlocking { getMaxstepNum() } != 0) k = runBlocking { getMaxstepNum() }
     }
+
+    private suspend fun getMaxstepNum(): Int {
+        return mtodoListViewModel.getMaxstepNum(detailsId!!)
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -76,10 +80,8 @@ class editStepsFragment : Fragment() {
 
         mtodoListViewModel.DetailsWithSteps(detailsId!!).observe(viewLifecycleOwner) { steps ->
             steps?.let {
-                if (steps[0].steps.isNotEmpty()) {
-                    newList = steps[0].steps.toMutableList()
-                    stepsAdapter.setData(newList)
-                }
+                newList = steps[0].steps.toMutableList()
+                stepsAdapter.setData(newList)
                 _binding!!.titleEt.setText(steps[0].details.title)
                 _binding!!.descriptionEt.setText(steps[0].details.description)
                 _binding!!.dateEt.setText(steps[0].details.date)
@@ -89,12 +91,11 @@ class editStepsFragment : Fragment() {
 
         _binding!!.addStepiv.setOnClickListener {
 
-            if (k < 5) {
+            if (k <= 5) {
 
                 Toast.makeText(requireContext(), "Successfully added!", Toast.LENGTH_SHORT).show()
-                val newStep = Steps(0, detailsId!!, todoId!!, k, null, null, 0)
+                newList.add(Steps(0, detailsId!!, todoId!!, k, null, null, 0))
                 k++
-                newList.add(newStep)
                 stepsAdapter.setData(newList)
             } else {
                 Toast.makeText(requireContext(), "You can't add more steps", Toast.LENGTH_LONG)
@@ -118,13 +119,16 @@ class editStepsFragment : Fragment() {
 
                 if (indicator == 1) {
                     steps.removeAt(adapterposition)
+
                     for (index in steps.indices) {
                         steps[index].stepNum = index + 1
                     }
+
                     newList = steps
                     stepsAdapter.setData(newList)
+                    isUserUpdate = false
 
-                    if(k>0) k--
+                    if (k > 1) k--
 
                 } else if (indicator == 2) {
 
@@ -141,7 +145,6 @@ class editStepsFragment : Fragment() {
 
         _binding!!.checkFAB.setOnClickListener {
             insertDataToDatabase()
-
         }
 
     }
@@ -154,22 +157,18 @@ class editStepsFragment : Fragment() {
         val date = _binding!!.dateEt.text.toString()
 
         if (inputCheck(title, date)) {
-            val detail = Details(detailsId!!, todoId!!, title, description, 0, date, "1/" + k.toString())
-
-            mtodoListViewModel.deleteallsteps()
-            for (step in newList) {
-                mtodoListViewModel.addsteps(step)
-            }
-
+            val detail = Details(detailsId!!, todoId!!, title, description, 0, date, "0", "",0)
             mtodoListViewModel.updatedetails(detail)
+
+            mtodoListViewModel.deleteAndCreate(newList,detailsId!!)
 
             Toast.makeText(requireContext(), "Successfully added!", Toast.LENGTH_SHORT).show()
 
             val bundle = Bundle()
-            bundle.putString("heading", heading)
             bundle.putInt("todoId", todoId!!)
             bundle.putInt("detailsId", detailsId!!)
 
+            findNavController().popBackStack()
             findNavController().navigate(
                 R.id.stepsFragment,
                 bundle
@@ -203,5 +202,6 @@ class editStepsFragment : Fragment() {
         )
         datePickerDialog.show()
     }
+
 
 }

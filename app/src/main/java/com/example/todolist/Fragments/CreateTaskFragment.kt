@@ -1,7 +1,6 @@
 package com.example.todolist.Fragments
 
 import android.app.DatePickerDialog
-import android.content.Context
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.ContextThemeWrapper
@@ -15,12 +14,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todolist.Database.Details
 import com.example.todolist.Database.Steps
-import com.example.todolist.Database.Todo
 import com.example.todolist.HelperClasses.CreateTaskStepsAdapter
-import com.example.todolist.HelperClasses.StepsAdapter
-import com.example.todolist.HelperClasses.todoListAdapter
 import com.example.todolist.R
-import com.example.todolist.Relations.DetailsWithSteps
 import com.example.todolist.TodoDatabase.todoListApplication
 import com.example.todolist.TodoDatabase.todoListViewModel
 import com.example.todolist.databinding.FragmentCreateTaskBinding
@@ -40,14 +35,24 @@ class createTaskFragment : Fragment() {
         todoListViewModel.todoListViewModelFactory((requireContext().applicationContext as todoListApplication).repository)
     }
 
+    private suspend fun deletestepswithid(id: Int) {
+        mtodoListViewModel.deletestepswithid(id)
+    }
+
+    private suspend fun insertsteps(step: Steps) {
+        mtodoListViewModel.insertsteps(step)
+    }
+
 
     private var detailsId: Int = 0
+    var stepsId: Int = 0
     private var k: Int = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         heading = arguments?.getString("heading")
         todoId = arguments?.getInt("todoId")
         detailsId = arguments?.getInt("detailsId")!!
+        stepsId = arguments?.getInt("stepsId")!!
 
     }
 
@@ -83,6 +88,7 @@ class createTaskFragment : Fragment() {
 
                 val newStep = Steps(0, detailsId, todoId!!, k, null, null, 0)
                 newList.add(newStep)
+                println("===============" + newList + "================")
                 stepsAdapter.setData(newList)
             } else {
                 Toast.makeText(requireContext(), "You can't add more steps", Toast.LENGTH_LONG)
@@ -94,7 +100,7 @@ class createTaskFragment : Fragment() {
             val bundle = Bundle()
             bundle.putString("heading", heading)
             bundle.putInt("todoId", todoId!!)
-            mtodoListViewModel.deletesteps(detailsId)
+            runBlocking { deletestepswithid(detailsId) }
             findNavController().navigate(
                 R.id.detailsFragment,
                 bundle
@@ -149,10 +155,10 @@ class createTaskFragment : Fragment() {
         val date = _binding!!.dateEt.text.toString()
 
         if (inputCheck(title, date)) {
-            val detail = Details(0, todoId!!, title, description, 0, date, "1/" + k.toString())
+            val detail = Details(0, todoId!!, title, description, 0, date, "0","0/"+k.toString(),0)
 
             for (step in newList) {
-                mtodoListViewModel.addsteps(step)
+                runBlocking { insertsteps(step) }
             }
 
             mtodoListViewModel.adddetails(detail)
@@ -196,6 +202,12 @@ class createTaskFragment : Fragment() {
             }, year, month, day
         )
         datePickerDialog.show()
+    }
+
+    fun generateuniqueId(): Int{
+        stepsId++
+        return stepsId
+
     }
 
 

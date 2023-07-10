@@ -52,7 +52,6 @@ class CreateTaskStepsAdapter(private val context: Context) :
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val currentItem = todoList[position]
 
-        holder.id = currentItem.id
         holder.stepsnum.text = currentItem.stepNum.toString()
         holder.title.setText(currentItem.title)
         holder.description.setText(currentItem.description)
@@ -77,7 +76,6 @@ class CreateTaskStepsAdapter(private val context: Context) :
                var Ids= mutableListOf<Int>()
 
                 for (step in steps) {
-                    Ids.add(step.id)
                 }
 
                 val position = adapterPosition

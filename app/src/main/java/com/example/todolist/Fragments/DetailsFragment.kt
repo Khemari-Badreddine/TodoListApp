@@ -6,31 +6,35 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.Database.Details
 import com.example.todolist.HelperClasses.detailsAdapter
+import com.example.todolist.HelperClasses.todoListAdapter
 import com.example.todolist.MainActivity
 import com.example.todolist.R
 import com.example.todolist.TodoDatabase.todoListApplication
 import com.example.todolist.TodoDatabase.todoListViewModel
 import com.example.todolist.databinding.FragmentDetailsBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.runBlocking
-
 
 class detailsFragment : Fragment() {
 
     private var _binding: FragmentDetailsBinding? = null
 
     lateinit var detailsRecyclerView: RecyclerView
-    var heading: String? = null
     var todoId: Int? = 0
     var detailsId: Int? = 0
+    lateinit var madapter: detailsAdapter
+
 
     private lateinit var context: Context
 
@@ -44,12 +48,15 @@ class detailsFragment : Fragment() {
         todoListViewModel.todoListViewModelFactory((requireContext().applicationContext as todoListApplication).repository)
     }
 
+
     private suspend fun getNextDetailsId(): Int = mtodoListViewModel.getNextDetailsId()
 
+    private suspend fun deletestepswithid(id: Int) {
+        mtodoListViewModel.deletestepswithid(id)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        heading = arguments?.getString("heading")
         todoId = arguments?.getInt("todoId")
         detailsId = runBlocking { getNextDetailsId() }
 
@@ -64,13 +71,20 @@ class detailsFragment : Fragment() {
 
         _binding = FragmentDetailsBinding.bind(view)
 
-        _binding!!.todotv.text = heading
+        return _binding!!.root
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
 
         val sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 
-        if (detailsId == 0) detailsId = sharedPreferences.getInt("detailsId", 1)
-        else {
+        if (detailsId == 0) {
+            detailsId = sharedPreferences.getInt("detailsId", 1)
+        } else {
             editor.putInt("detailsId", detailsId!!)
             editor.apply()
         }
@@ -83,22 +97,22 @@ class detailsFragment : Fragment() {
 
         }
 
-
         detailsRecyclerView = _binding!!.detailsRv
 
-        val madapter = detailsAdapter(context)
-
+        madapter = detailsAdapter(context)
 
         detailsRecyclerView.adapter = madapter
         detailsRecyclerView.layoutManager = LinearLayoutManager(context)
 
-        if (todoId != null) {
-            mtodoListViewModel.alldetails(todoId!!).observe(viewLifecycleOwner) { details ->
-                details?.let {
-                    madapter.setData(it)
-                }
+
+        mtodoListViewModel.alldetails(todoId!!).observe(viewLifecycleOwner) { details ->
+            details?.let {
+                madapter.setData(it[0].details)
             }
+            _binding!!.todotv.text = details[0].todo.title
+
         }
+
 
         madapter.setOnItemClickListener(object : detailsAdapter.onItemClickListener {
 
@@ -108,11 +122,23 @@ class detailsFragment : Fragment() {
                 description: String?,
                 status: Int,
                 date: String,
+                stepsdone: String,
                 steps: String,
+                progress: Int,
                 indicator: Int
             ) {
 
-                val details = Details(0, todoId!!, title, description!!, status, date, steps)
+                val details = Details(
+                    position,
+                    todoId!!,
+                    title,
+                    description!!,
+                    status,
+                    date,
+                    stepsdone,
+                    steps,
+                    progress
+                )
 
                 if (indicator == 0) {
                     Toast.makeText(
@@ -122,8 +148,8 @@ class detailsFragment : Fragment() {
                     ).show()
                     val bundle = Bundle()
                     bundle.putInt("detailsId", position)
-                    bundle.putString("heading", heading)
                     bundle.putInt("todoId", todoId!!)
+
                     findNavController().navigate(
                         R.id.stepsFragment,
                         bundle
@@ -133,17 +159,15 @@ class detailsFragment : Fragment() {
                     mtodoListViewModel.updatedetails(details)
                 } else if (indicator == 2) {
                     mtodoListViewModel.deletedetails(position)
-                    mtodoListViewModel.deletesteps(position)
+                    runBlocking { deletestepswithid(position) }
 
                 }
             }
         })
 
 
-
         _binding!!.addFAB.setOnClickListener {
             val bundle = Bundle()
-            bundle.putString("heading", heading)
             bundle.putInt("todoId", todoId!!)
             bundle.putInt("detailsId", detailsId!!)
 
@@ -158,8 +182,39 @@ class detailsFragment : Fragment() {
              showDialog()
          }*/
 
+        val searchView = _binding!!.search
+        searchView?.isSubmitButtonEnabled = true
+        searchView?.setOnClickListener { searchView?.setIconified(false) }
+        searchView.setQueryHint("Search..")
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null) {
+                    searchDatabase(query)
+                }
+                return true
+            }
 
-        return _binding!!.root
+            override fun onQueryTextChange(query: String?): Boolean {
+                if (query != null) {
+                    searchDatabase(query)
+                }
+                return true
+            }
+        })
+
+    }
+
+    private fun searchDatabase(query: String) {
+        val searchQuery = "%$query%"
+
+        println("todoId: " + todoId)
+        mtodoListViewModel.searchtdetailstable(searchQuery, todoId!!)
+            .observe(viewLifecycleOwner) { list ->
+                list.let {
+                    madapter.setData(list)
+                }
+            }
     }
 
 }
+

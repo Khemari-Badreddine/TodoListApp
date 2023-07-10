@@ -7,20 +7,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.codinginflow.customspinnerexample.SpinnerAdapter
 import com.example.todolist.Database.Details
 import com.example.todolist.R
-import com.example.todolist.Relations.TodoWithDetails
 import kotlin.properties.Delegates
-
 
 class detailsAdapter(private val context: Context) :
     RecyclerView.Adapter<detailsAdapter.MyViewHolder>() {
 
-    private var todoList = emptyList<TodoWithDetails>()
+    private var todoList = emptyList<Details>()
 
 
     private lateinit var mlistener: onItemClickListener
@@ -32,7 +32,9 @@ class detailsAdapter(private val context: Context) :
             description: String?,
             status: Int,
             date: String,
+            stepsdone: String,
             steps: String,
+            progress: Int,
             indicator: Int
         )
     }
@@ -45,46 +47,58 @@ class detailsAdapter(private val context: Context) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         return MyViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.details_card, parent, false),
-            this
+            this, context
         )
     }
 
     override fun getItemCount(): Int {
-        return if (todoList.isNotEmpty() && todoList[0].details.isNotEmpty()) {
-          //  println("===========NOT EMMPTYYYY=============")
-            todoList[0].details.size
+        return if (todoList.isNotEmpty()) {
+            todoList.size
         } else {
-           // println("===========EMMPTYYYY=============")
             0
         }
     }
 
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val currentItem = todoList[0].details
+        val currentItem = todoList[position]
 
-        holder.id = currentItem[position].id
-        holder.description = currentItem[position].description
-        holder.title.text = currentItem[position].title
-        holder.date.text = currentItem[position].date
-        holder.steps.text = currentItem[position].steps
-        holder.spinner.setSelection(currentItem[position].status)
+        holder.id = currentItem.id
+        holder.description = currentItem.description
+        holder.title.text = currentItem.title
+        holder.date.text = currentItem.date
+        holder.steps.text = currentItem.steps
+        holder.stepsdone = currentItem.col_stepsdone
+        holder.progressBar.progress = currentItem.progress
+        holder.spinner.setSelection(currentItem.status)
+        holder.spinner.isEnabled = false
 
-        holder.bind(currentItem[position])
+        holder.bind(currentItem)
 
     }
 
-    class MyViewHolder(itemView: View, private val adapter: detailsAdapter) :
+    class MyViewHolder(
+        itemView: View,
+        private val adapter: detailsAdapter,
+        private val context: Context
+    ) :
         RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.title)
         val date: TextView = itemView.findViewById(R.id.datetv)
         val steps: TextView = itemView.findViewById(R.id.stepstv)
+        val progressBar: ProgressBar = itemView.findViewById(R.id.progressBar)
         val spinner: Spinner = itemView.findViewById(R.id.status_spinner)
-        var description : String? = null
+        var description: String? = null
         val delete: ImageView = itemView.findViewById(R.id.delete)
         var id by Delegates.notNull<Int>()
+        var stepsdone by Delegates.notNull<String>()
+
+        private var madapter: SpinnerAdapter
+        private var statusList: ArrayList<String?> = arrayListOf("In Progress", "Pending", "Done")
 
         init {
+            madapter = SpinnerAdapter(context, statusList)
+            spinner.adapter = madapter
 
             itemView.setOnClickListener {
 
@@ -94,7 +108,9 @@ class detailsAdapter(private val context: Context) :
                     description,
                     getSpinnerPosition(spinner.selectedItem.toString()),
                     date.text.toString(),
+                    stepsdone,
                     steps.text.toString(),
+                    progressBar.progress,
                     0
                 )
 
@@ -111,11 +127,8 @@ class detailsAdapter(private val context: Context) :
         }
 
         fun bind(item: Details) {
-            // Get the context from the itemView
-            val coontext = itemView.context
 
             spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-
 
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -123,45 +136,18 @@ class detailsAdapter(private val context: Context) :
                     position: Int,
                     id: Long
                 ) {
-                    // Get the selected item
-                    val selectedItem = spinner.selectedItem.toString()
-                    val selectedItemView = view as TextView
-
 
                     adapter.mlistener.onItemClick(
                         item.id,
-
                         title.text.toString(),
                         description,
                         getSpinnerPosition(spinner.selectedItem.toString()),
                         date.text.toString(),
+                        stepsdone,
                         steps.text.toString(),
+                        progressBar.progress,
                         1
                     )
-
-
-                    when (selectedItem) {
-                        "In Progress" -> {
-                            spinner.setBackgroundResource(R.drawable.progress_bg)
-                            val textcolor = ContextCompat.getColor(coontext, R.color.orange)
-                            selectedItemView.setTextColor(textcolor)
-
-                        }
-
-                        "Pending" -> {
-                            spinner.setBackgroundResource(R.drawable.pending_bg)
-                            val textcolor = ContextCompat.getColor(coontext, R.color.redish)
-                            selectedItemView.setTextColor(textcolor)
-
-                        }
-
-                        "Done" -> {
-                            spinner.setBackgroundResource(R.drawable.done_bg)
-                            val textcolor = ContextCompat.getColor(coontext, R.color.green)
-                            selectedItemView.setTextColor(textcolor)
-
-                        }
-                    }
 
                 }
 
@@ -188,7 +174,9 @@ class detailsAdapter(private val context: Context) :
                         description,
                         getSpinnerPosition(spinner.selectedItem.toString()),
                         date.text.toString(),
+                        stepsdone,
                         steps.text.toString(),
+                        progressBar.progress,
                         2
                     )
 
@@ -199,11 +187,10 @@ class detailsAdapter(private val context: Context) :
 
         }
 
-
     }
 
 
-    fun setData(todoList: List<TodoWithDetails>) {
+    fun setData(todoList: List<Details>) {
         this.todoList = todoList
         notifyDataSetChanged()
     }

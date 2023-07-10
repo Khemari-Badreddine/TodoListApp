@@ -25,6 +25,12 @@
 
     </style>
 
+    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
+        <!-- Customize other attributes of the SearchView style if needed -->
+        <item name="android:textColorHint">@color/black</item>
+    </style>
+
+
 
 
 

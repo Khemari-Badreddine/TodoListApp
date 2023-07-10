@@ -7,6 +7,7 @@
     android:background="#fafafa"
     tools:context=".Fragments.detailsFragment">
 
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linearLayoutCompat"
         android:layout_width="match_parent"
@@ -29,9 +30,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/vector"
                 android:clickable="true"
-                />
+                android:contentDescription="Go back"
+                android:padding="5dp"
+                app:srcCompat="@drawable/vector" />
 
             <TextView
                 android:id="@+id/todotv"
@@ -50,6 +52,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|bottom"
                 android:layout_margin="5dp"
+                android:contentDescription="add"
+
                 app:backgroundTint="#FFFFFF"
                 app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.FloatingActionButton.Circle"
                 app:srcCompat="@drawable/baseline_add_24"
@@ -66,13 +70,14 @@
             android:gravity="end"
             android:orientation="horizontal">
 
-            <SearchView
+            <android.widget.SearchView
+                android:id="@+id/search"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/search_view_bg"></SearchView>
+                android:background="@drawable/search_view_bg" />
 
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -81,6 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|bottom"
                 android:layout_margin="5dp"
+                android:contentDescription="Filter"
                 app:backgroundTint="#FFFFFF"
                 app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.FloatingActionButton.Circle"
                 app:srcCompat="@drawable/filter" />
@@ -90,7 +96,6 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
-
             android:id="@+id/detailsRv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -102,7 +107,6 @@
             app:layout_constraintTop_toBottomOf="@+id/search"
             app:layout_constraintVertical_bias="1.0"
             tools:listitem="@layout/details_card">
-
         </androidx.recyclerview.widget.RecyclerView>
     </androidx.appcompat.widget.LinearLayoutCompat>
 

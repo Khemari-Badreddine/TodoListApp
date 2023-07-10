@@ -7,12 +7,11 @@
     android:background="#fafafa"
     tools:context=".Fragments.StepsFragment">
 
-
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linearLayoutCompat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="20dp"
+        android:layout_margin="5dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,6 +29,7 @@
                 android:id="@+id/backiv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="20dp"
                 android:src="@drawable/vector"
                 android:clickable="true" />
 
@@ -63,30 +63,28 @@
             android:textStyle="bold" />
         <TextView
             android:id="@+id/descriptiontv"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="Do some research on what makes us different from our competition and prepare a presentation to show to our new client."
             android:textColor="#1E1E1E"
+            android:gravity="center"
             android:textSize="16sp"
             />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:gravity="center"
             android:layout_margin="10dp"
-
             >
 
             <Spinner
                 android:id="@+id/status_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/progress_bg"
-                android:entries="@array/status_string_array"
-                android:layout_marginEnd="15dp"
-
+                android:background="@drawable/spinner_bg"
+                tools:listitem="@layout/spinner_row"
                 />
 
 
@@ -95,6 +93,8 @@
                 android:layout_width="28dp"
                 android:layout_height="22dp"
                 android:layout_gravity="center"
+                android:layout_toRightOf="@id/status_spinner"
+                android:layout_centerVertical="true"
                 app:srcCompat="@drawable/date"
                 />
 
@@ -105,6 +105,8 @@
                 android:layout_height="wrap_content"
                 android:text="Until "
                 android:layout_marginLeft="6dp"
+                android:layout_toRightOf="@id/imageview"
+                android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 />
 
@@ -113,7 +115,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="January 23"
-                android:layout_weight="0.5"
+                android:layout_toRightOf="@id/textView"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="15dp"
                 android:layout_gravity="center"
                 />
 
@@ -123,7 +127,9 @@
                 android:layout_height="22dp"
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/done"
-
+                android:layout_toRightOf="@id/datetv"
+                android:layout_centerVertical="true"
+                android:tint="@color/orange"
                 />
 
             <TextView
@@ -132,44 +138,12 @@
                 android:layout_height="wrap_content"
                 android:text="3/5"
                 android:layout_gravity="center"
-                android:layout_weight="1"
+                android:layout_toRightOf="@id/stepsiv"
+                android:layout_centerVertical="true"
                 />
 
 
-        </LinearLayout>
-
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:orientation="horizontal">
-
-            <SearchView
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/search_view_bg">
-
-            </SearchView>
-
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/filterFAB"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|bottom"
-                android:layout_margin="5dp"
-                app:backgroundTint="#FFFFFF"
-                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.FloatingActionButton.Circle"
-                app:srcCompat="@drawable/filter" />
-
-
-        </LinearLayout>
-
+        </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/stepsRv"

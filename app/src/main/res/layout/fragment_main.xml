@@ -8,7 +8,6 @@
     tools:context=".Fragments.MainFragment"
     >
 
-
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linearLayoutCompat"
         android:layout_width="match_parent"
@@ -31,11 +30,13 @@
             >
 
 
-            <SearchView
+            <android.widget.SearchView
+                android:id="@+id/search"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_weight="0.5"
                 android:layout_gravity="center"
+                app:iconifiedByDefault="false"
                 android:layout_margin="5dp"
                 android:background="@drawable/search_view_bg"
                 />
@@ -55,18 +56,11 @@
         </LinearLayout>
 
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mainRv"
-            android:layout_width="346dp"
-            android:layout_height="596dp"
-            android:layout_weight="1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.492"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search"
-            app:layout_constraintVertical_bias="1.0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             tools:listitem="@layout/main_card">
 
         </androidx.recyclerview.widget.RecyclerView>

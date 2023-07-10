@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#fafafa">
@@ -58,9 +59,9 @@
                     android:id="@+id/status_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/progress_bg"
-                    android:entries="@array/status_string_array" />
-
+                    android:background="@null"
+                    android:entries="@array/status_string_array"
+                    tools:listitem="@layout/spinner_row" />
 
                 <TextView
                     android:id="@+id/title"

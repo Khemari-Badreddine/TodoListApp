@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="10dp"
     android:background="#FFFFFF"
     app:cardCornerRadius="20dp"
-    android:id="@+id/rowLayout"
-    >
+    android:id="@+id/rowLayout">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,8 +25,10 @@
                 android:id="@+id/status_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/progress_bg"
-                android:entries="@array/status_string_array" />
+                android:background="@drawable/spinner_bg"
+                tools:listitem="@layout/spinner_row"
+                android:entries="@array/status_string_array"
+                />
 
 
         </LinearLayout>

@@ -1,37 +1,36 @@
 package com.example.todolist.Fragments
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.codinginflow.customspinnerexample.SpinnerAdapter
+import com.example.todolist.Database.SpinnerItem
 import com.example.todolist.Database.Todo
+import com.example.todolist.HelperClasses.StepsAdapter
 import com.example.todolist.HelperClasses.todoListAdapter
-
 import com.example.todolist.R
 import com.example.todolist.TodoDatabase.todoListApplication
 import com.example.todolist.TodoDatabase.todoListViewModel
-import com.example.todolist.databinding.FragmentDetailsBinding
 import com.example.todolist.databinding.FragmentMainBinding
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.runBlocking
 
 
 class MainFragment : Fragment() {
 
     private var _binding: FragmentMainBinding? = null
-
+    lateinit var madapter: todoListAdapter
     private lateinit var context: Context
-
     lateinit var mainRecyclerView: RecyclerView
 
 
@@ -43,9 +42,6 @@ class MainFragment : Fragment() {
     private val mtodoListViewModel: todoListViewModel by viewModels {
         todoListViewModel.todoListViewModelFactory((requireContext().applicationContext as todoListApplication).repository)
     }
-
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,11 +59,32 @@ class MainFragment : Fragment() {
 
         mainRecyclerView = _binding!!.mainRv
 
-        val madapter = todoListAdapter(context)
+        madapter = todoListAdapter(context)
 
 
         mainRecyclerView.adapter = madapter
         mainRecyclerView.layoutManager = LinearLayoutManager(context)
+
+        val searchView = _binding!!.search
+        searchView?.isSubmitButtonEnabled = true
+        searchView?.setOnClickListener { searchView?.setIconified(false) }
+        searchView.setQueryHint("Search..")
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null) {
+                    searchDatabase(query)
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(query: String?): Boolean {
+                if (query != null) {
+                    searchDatabase(query)
+                }
+                return true
+            }
+        })
+
 
         mtodoListViewModel.alltodo.observe(viewLifecycleOwner) { todo ->
             todo.let {
@@ -75,7 +92,7 @@ class MainFragment : Fragment() {
             }
         }
 
-        _binding!!.floatingActionButton.setOnClickListener{
+        _binding!!.floatingActionButton.setOnClickListener {
             showDialog()
         }
 
@@ -92,8 +109,6 @@ class MainFragment : Fragment() {
                     ).show()
 
                     val bundle = Bundle()
-                    bundle.putString("heading", title)
-                    println("============"+position+"==============")
                     bundle.putInt("todoId", position!!)
 
                     findNavController().navigate(
@@ -113,6 +128,7 @@ class MainFragment : Fragment() {
 
         })
     }
+
 
     private fun showDialog() {
         val builder = AlertDialog.Builder(context)
@@ -135,5 +151,13 @@ class MainFragment : Fragment() {
 
     }
 
+    private fun searchDatabase(query: String) {
+        val searchQuery = "%$query%"
 
+        mtodoListViewModel.searchtodoListtable(searchQuery).observe(viewLifecycleOwner) { list ->
+            list.let {
+                madapter.setData(list)
+            }
+        }
+    }
 }
