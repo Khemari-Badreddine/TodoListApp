@@ -41,7 +41,7 @@
             android:layout_gravity="center"
             android:fontFamily="sans-serif-black"
             android:gravity="center"
-            android:text="My Project"
+            android:text="@string/MyProject"
             android:textColor="#1E1E1E"
             android:textSize="24sp"
             android:textStyle="bold" />

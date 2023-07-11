@@ -57,7 +57,6 @@ abstract class todoListDataBase : RoomDatabase() {
                     context.applicationContext,
                     todoListDataBase::class.java,
                     "note_db"
-
                 )
                     .addCallback(todoDatabaseCallback(scope))
                     .build()

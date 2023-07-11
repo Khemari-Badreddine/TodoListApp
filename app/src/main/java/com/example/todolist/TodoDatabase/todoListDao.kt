@@ -15,10 +15,8 @@ import com.example.todolist.Relations.DetailsWithSteps
 import com.example.todolist.Relations.TodoWithDetails
 import kotlinx.coroutines.flow.Flow
 
-
 @Dao
 interface todoListDao {
-
 
     //Todo DAO
 

@@ -9,8 +9,8 @@
         android:id="@+id/my_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter text here"
-
+        android:hint="@string/Entertexthere"
+        android:minHeight="48dp"
         />
 
 </LinearLayout>

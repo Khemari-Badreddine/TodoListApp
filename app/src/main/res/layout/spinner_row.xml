@@ -9,7 +9,7 @@
         android:id="@+id/name"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:text="In Progress"
+        android:text="@string/InProgress"
         android:layout_centerVertical="true"
         android:gravity="center"
         android:textSize="15sp"

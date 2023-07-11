@@ -7,10 +7,6 @@ import kotlinx.coroutines.SupervisorJob
 class todoListApplication : Application() {
 
     val applicationScope = CoroutineScope(SupervisorJob())
-
-
-
     val database by lazy { todoListDataBase.getDatabase(this,applicationScope)  }
     val repository by lazy { todoListRepository(database.getDao()) }
-
 }
