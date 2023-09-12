@@ -1,7 +1,9 @@
 # TodoList app
 Some ScreenShots
-![Screenshot_20230710_131628](https://github.com/Khemari-Badreddine/TodoList-App/assets/106264457/67a9b173-6716-414d-b2e0-756c5081001e)
-![Screenshot_20230710_132134](https://github.com/Khemari-Badreddine/TodoList-App/assets/106264457/6466a089-aa17-47c7-9077-c7bed9901fe2)
-![Screenshot_20230710_132725](https://github.com/Khemari-Badreddine/TodoList-App/assets/106264457/f09c2f61-6ff5-4021-8588-a2e24a853a7c)
-![Screenshot_20230710_132735](https://github.com/Khemari-Badreddine/TodoList-App/assets/106264457/58158f31-3d74-4af0-9149-ce4a0119ab34)
-![Screenshot_20230710_132758](https://github.com/Khemari-Badreddine/TodoList-App/assets/106264457/8484c86c-a3fd-4319-affc-155041285b1b)
+
+![Screenshot_20230710_131628](https://github.com/Khemari-Badreddine/TodoList-App/assets/106264457/2f38f887-34b3-49db-b2d7-374d0080a1d7)
+![Screenshot_20230710_132134](https://github.com/Khemari-Badreddine/TodoList-App/assets/106264457/ffc4cbea-7e8b-4e75-aeda-e1b35ad4d6dc)
+![Screenshot_20230710_132725](https://github.com/Khemari-Badreddine/TodoList-App/assets/106264457/dcf3dd6b-48db-47dc-9ebe-98fd8ba2571d)
+![Screenshot_20230710_132735](https://github.com/Khemari-Badreddine/TodoList-App/assets/106264457/dd88bbc7-d549-4044-8ed4-eb0095134eb0)
+![Screenshot_20230710_132758](https://github.com/Khemari-Badreddine/TodoList-App/assets/106264457/6eda8a0d-43b4-42d4-a831-51603f03833d)
+
