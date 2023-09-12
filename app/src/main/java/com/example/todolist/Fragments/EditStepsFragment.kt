@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todolist.Database.Details
@@ -21,7 +20,6 @@ import com.example.todolist.R
 import com.example.todolist.TodoDatabase.todoListApplication
 import com.example.todolist.TodoDatabase.todoListViewModel
 import com.example.todolist.databinding.FragmentEditStepsBinding
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 

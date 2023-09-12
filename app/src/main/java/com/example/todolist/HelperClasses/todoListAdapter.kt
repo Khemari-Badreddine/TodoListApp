@@ -9,10 +9,8 @@ import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.codinginflow.customspinnerexample.SpinnerAdapter
-import com.example.todolist.Database.SpinnerItem
 import com.example.todolist.R
 import com.example.todolist.Database.Todo
 import kotlin.properties.Delegates

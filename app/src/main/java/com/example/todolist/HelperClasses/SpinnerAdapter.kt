@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import com.example.todolist.Database.SpinnerItem
 import com.example.todolist.R
 
 class SpinnerAdapter(context: Context, statusList: ArrayList<String?>) :

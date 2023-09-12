@@ -32,12 +32,12 @@ abstract class todoListDataBase : RoomDatabase() {
             }
         }
 
+        //use this function to populate the database if needed
         fun populateDatabase(todoDao: todoListDao) {
             todoDao.deleteAll()
 
             // val todo = Todo(0, "lmfao", 1)
             //  todoDao.inserttodo(todo)
-
 
         }
     }

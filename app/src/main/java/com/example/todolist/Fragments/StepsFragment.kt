@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,7 +13,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.codinginflow.customspinnerexample.SpinnerAdapter
 import com.example.todolist.Database.Details
-import com.example.todolist.Database.SpinnerItem
 import com.example.todolist.Database.Steps
 import com.example.todolist.HelperClasses.StepsAdapter
 import com.example.todolist.R

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ToDoList</string>
+    <string name="app_name">ToDoList Pro</string>
     <string name="searchbar_scrolling_view_behavior">androidx.appcompat.widget.SearchView$SearchBarScollingViewBehavior</string>
     <string name="InProgress">In Progress</string>
     <string name="Entertexthere">Enter text here</string>
